@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Latest News</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      h1 {
+        color: #444;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      #news-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      article {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        width: 80%;
+      }
+
+      h2 {
+        color: #0056b3;
+      }
+
+      a {
+        color: #0056b3;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      #search-input {
+        margin-bottom: 20px;
+        padding: 10px;
+        width: 80%;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Latest News</h1>
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search for articles..."
+      onkeyup="filterArticles()"
+    />
+    <div id="news-container"></div>
+
+    <script>
+      // Fetch the JSON data and display it
+      async function fetchNews() {
+        const response = await fetch("news.json");
+        const articles = await response.json();
+        displayArticles(articles);
+      }
+
+      // Function to display the news articles
+      function displayArticles(articles) {
+        const newsContainer = document.getElementById("news-container");
+        newsContainer.innerHTML = ""; // Clear any existing content
+
+        articles.forEach((article) => {
+          const articleElement = document.createElement("article");
+          articleElement.innerHTML = `
+          <h2>${article.title}</h2>
+          <p>${article.description || "No description available"}</p>
+          <p><a href="${article.url}" target="_blank">Read more</a></p>
+        `;
+          newsContainer.appendChild(articleElement);
+        });
+      }
+
+      // Search and filter articles based on input
+      function filterArticles() {
+        const input = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+        const articles = document.querySelectorAll("article");
+        articles.forEach((article) => {
+          const title = article.querySelector("h2").textContent.toLowerCase();
+          if (title.includes(input)) {
+            article.style.display = "block";
+          } else {
+            article.style.display = "none";
+          }
+        });
+      }
+
+      // Fetch and display the news when the page loads
+      fetchNews();
+    </script>
+  </body>
+</html>
